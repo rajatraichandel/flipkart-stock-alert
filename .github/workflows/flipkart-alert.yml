@@ -1,0 +1,44 @@
+name: Flipkart Stock Alert
+
+# Started every 5 minutes by an external timer (cron-job.org) through the
+# workflow_dispatch API. GitHub's own `schedule` trigger is not used because it
+# runs hours late in practice and gets disabled after 60 days without commits.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: flipkart-stock-alert
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Restore alert state
+        uses: actions/cache/restore@v4
+        with:
+          path: state.json
+          key: flipkart-state-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            flipkart-state-
+
+      - name: Run stock check
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python3 flipkart_alert.py
+
+      - name: Save alert state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: state.json
+          key: flipkart-state-${{ github.run_id }}-${{ github.run_attempt }}

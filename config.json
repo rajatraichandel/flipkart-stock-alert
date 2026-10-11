@@ -1,0 +1,11 @@
+{
+  "timeout_seconds": 20,
+  "failure_alert_after": 6,
+  "products": [
+    {
+      "name": "CASIO F-91W-1DG Youth Digital Watch",
+      "url": "https://www.flipkart.com/casio-f-91w-1dg-youth-f-91w-1q-digital-watch-men/p/itm0dbd35985f508?pid=WATD9H77SCHVGYDS&lid=LSTWATD9H77SCHVGYDSL7G1DV&marketplace=FLIPKART",
+      "enabled": true
+    }
+  ]
+}
